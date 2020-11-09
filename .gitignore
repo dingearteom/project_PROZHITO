@@ -1,0 +1,8 @@
+evaluation/.ipynb_checkpoints
+venv
+__pycache__
+.git
+.idea
+model/__pycache__
+evaluation/__pycache__
+data/Новая разметка
