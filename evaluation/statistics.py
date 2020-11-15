@@ -48,7 +48,7 @@ class statistics:
         return statistics(self.total_true + other.total_true, self.total_answered + other.total_answered, self.missed + other.missed, self.error + other.error)
 
     def __str__(self):
-        s = f"Total in the documents: {self.total_true}\nTotal answered by model: {self.total_answered}\n"
+        s = f"Total in the document: {self.total_true}\nTotal answered by model: {self.total_answered}\n"
         s += f"missed_rate: {self.missed_rate}%\nerror_rate: {self.error_rate}%\nright_rate: {self.right_rate}%"
         return s
 

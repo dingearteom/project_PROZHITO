@@ -41,7 +41,7 @@ def render_box_markup(*args, **kwargs):
         palette_ = palette(PER_FIRST=PURPLE, PER_BOTH=GREEN, PER_SECOND=RED)
     else:
         markup = d['right_markup']
-        palette_ = palette(PER=GREEN)
+        palette_ = palette(PER=GREEN, LOC=PURPLE)
 
     if (not d['IPy']):
         lines = format_span_box_markup(markup.text, markup.spans, palette=palette_)

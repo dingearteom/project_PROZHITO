@@ -11,4 +11,4 @@ class Model:
         self.ner.navec(self.navec)
 
     def fit(self, document):
-        return SpanMarkup(document, self.ner(document).spans)
+        return self.ner(document)
