@@ -1,0 +1,5 @@
+Total in the document(s): 2
+Total answered by model: 2
+missed_rate: 0.0%
+error_rate: 0.0%
+right_rate: 100.0%

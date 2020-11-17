@@ -1,0 +1,5 @@
+Total in the document(s): 703
+Total answered by model: 2500
+missed_rate: 14.65149359886202%
+error_rate: 76.0%
+right_rate: 24.0%
