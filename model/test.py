@@ -8,6 +8,7 @@ from guppy import hpy
 import json
 import time
 import os
+import gc
 
 model = Model()
 res = statistics()
@@ -58,6 +59,8 @@ with open('data/main_file.txt') as file:
             print("Duration: ", duration, 's')
 
             res = res + st
+        gc.collect()
+
 print(res)
 
 with open("data/statistics.txt", 'w') as file:

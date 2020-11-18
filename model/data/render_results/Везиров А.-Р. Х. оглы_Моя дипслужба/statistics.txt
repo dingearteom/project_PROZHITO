@@ -1,0 +1,5 @@
+Total in the document(s): 422
+Total answered by model: 677
+missed_rate: 9.24170616113744%
+error_rate: 43.42688330871492%
+right_rate: 56.57311669128509%

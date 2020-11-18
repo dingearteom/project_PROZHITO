@@ -1,5 +1,5 @@
-Total in the document(s): 268
-Total answered by model: 661
-missed_rate: 12.313432835820896%
-error_rate: 64.44780635400907%
-right_rate: 35.55219364599092%
+Total in the document(s): 2929
+Total answered by model: 4370
+missed_rate: 26.35711847046774%
+error_rate: 50.64073226544622%
+right_rate: 49.359267734553775%
