@@ -6,8 +6,10 @@ import re
 from functools import total_ordering
 from slovnet.markup import SpanMarkup
 import textract
+from model.model import fit_time
 
 class DOC:
+    dates=None
     def __init__(self, file_name=None, text=None, paragraphs=None, per=None, processed=None, tags_deletion=False):
         if (processed == True):
             self.text = text
@@ -21,23 +23,13 @@ class DOC:
             self.text = other.text
             self.paragraphs = other.paragraphs
             self.per = other.per
+    def dates_extraction(self):
+        self.dates = fit_time(self.text)
+
 
 
 
 def docx_to_text(file_name):
-    # doc_ = ""
-    #
-    # file = docx.Document(file_name)
-    #
-    # ind = 0
-    # for para in file.paragraphs:
-    #     para = para.text
-    #
-    #     doc_ += para
-    #     if (ind != len(file.paragraphs) - 1):
-    #         doc_ += '\n'
-    #     ind += 1
-    # return doc_
     return textract.process(file_name).decode('utf8')
 
 def DOC_from_text(text, date_tags_deletion=False):

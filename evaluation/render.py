@@ -3,6 +3,7 @@ from ipymarkup import format_span_ascii_markup, format_span_box_markup
 from IPython.display import display, HTML
 from ipymarkup.palette import palette, PURPLE, RED, GREEN
 from ipymarkup import show_span_box_markup, show_span_ascii_markup
+import os
 
 def render_ascii_markup(*args, **kwargs):
     __attributes__ = ['right_markup', 'given_markup', 'File_Name', 'IPy']
@@ -49,6 +50,8 @@ def render_box_markup(*args, **kwargs):
         else:
             palette_ = d['palette']
 
+    if (not os.path.exists(d['File_Name'])):
+        os.system(f"touch {d['File_Name']}")
     if (not d['IPy']):
         lines = format_span_box_markup(markup.text, markup.spans, palette=palette_)
         html = HTML(''.join(lines))
