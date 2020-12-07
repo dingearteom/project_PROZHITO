@@ -1,0 +1,3 @@
+{
+    "data/Новая разметка/Полторанин М._Власть в тротиловом эквиваленте/Poltoranin_M_Vlast_v_trotilovom_ekvivalente.docx": 1
+}

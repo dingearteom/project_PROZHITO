@@ -1,89 +1,55 @@
 from navec import Navec
 from slovnet import NER
-from pullenti_wrapper.processor import DATE, Processor
-from slovnet.span import Span
-import sys
+from model.Per_and_locations_spans import Per_and_Loc
+from model.Persons.persons import Persons_extractor
+from model.Locations.loc_extractor import LOC_extractor
+from model.Paragraphs.Paragraphs import Paragraphs_Ext
+from model.Dates.dates import Dates
 
 class Model:
     def __init__(self):
-        print(sys.path)
-        self.navec = Navec.load('data/navec_news_v1_1B_250K_300d_100q.tar')
-        self.ner = NER.load('data/slovnet_ner_news_v1.tar')
-        self.ner.navec(self.navec)
-
+        self.Per_and_Loc = Per_and_Loc()
+        self.per_ext = Persons_extractor()
+        self.loc_ext = LOC_extractor()
+        self.par_ext = Paragraphs_Ext()
+        self.dates_ext = Dates()
     def fit(self, document):
-        return self.ner(document).spans
+        entities = self.Per_and_Loc.fit(document)
+        persons_spans = entities['PER']
+        locations_spans = entities['LOC']
+        persons = self.per_ext.fit(document, persons_spans)
+        locations = self.loc_ext.fit(document, locations_spans)
+        par_spans = self.par_ext.fit(document)
+        dates = self.dates_ext.fit(document)
 
-class Date:
-    def __init__(self, date, span):
+        d = DOC()
+        d.text = document
+        d.per = persons
+        d.locations = locations
+
+        ind = 0
+        for par_span in par_spans:
+            loc_in_par = []
+            while (ind < len(locations) and locations[ind].span.stop <= par_span.stop):
+                loc_in_par.append(locations[ind])
+                ind += 1
+                d.paragraphs.append(Paragraph(par_span, None, loc_in_par))
+        return d
+
+
+class DOC:
+    __attributes__ = ['text', 'per', 'paragraphs', 'locations']
+    text = None
+    per = []
+    paragraphs = []
+    def __init__(self):
+        pass
+
+class Paragraph:
+    __attributes__ = ['span', 'daterange', 'Locations']
+    span = daterange = None
+    Locations = []
+    def __init__(self, span, daterange, Locations):
         self.span = span
-        self.day = None
-        self.month = None
-        self.year = None
-        m = {'DAY': 'day', 'MONTH': 'month', 'YEAR': 'year'}
-
-        def get_date(object, date_):
-            for slot in date_.slots:
-                if (slot.key in ['DAY', 'MONTH', 'YEAR']):
-                    Date.__setattr__(object, m[slot.key], int(slot.value))
-                elif (slot.key == 'HIGHER'):
-                    get_date(object, slot.value)
-                else:
-                    raise NameError("Unknown key.")
-                    # if (not slot.key in ['POINTER', 'ISRELATIVE', 'QUARTAL']):
-                    #     print(slot.key)
-                    #     raise NameError("Unknown key.")
-            return
-        get_date(self, date)
-    def __str__(self):
-        return (("Day:" + str(self.day)) if (not self.day is None) else "") \
-               + (" Month:" + str(self.month) if (not self.month is None) else "") \
-               + (" Year:" + str(self.year) if (not self.year is None) else "")
-
-class DateRange:
-    def __init__(self, date, span):
-        try:
-            self.span = span
-            self.start = None
-            self.stop = None
-            for slot in date.slots:
-                if (slot.key == 'FROM'):
-                    self.start = Date(slot.value, Span(0, 0))
-                elif (slot.key == 'TO'):
-                    self.stop = Date(slot.value, Span(0, 0))
-                else:
-                    raise NameError('Unknown label while parsing DateRange')
-        except Exception as exc:
-            print(date)
-            raise(exc)
-
-    def __str__(self):
-        return "From " + self.start.__str__() + " To " + self.stop.__str__() + "\n"
-
-
-def fit_time(document):
-    processor = Processor([DATE])
-    print("Initialisation done.")
-    result = processor(document)
-    dates = []
-
-    for match in result.matches:
-        if (match.referent.label == 'DATE'):
-            try:
-                dates.append(Date(match.referent, match.span))
-            except:
-                pass
-        elif (match.referent.label == 'DATERANGE'):
-            try:
-                dates.append(DateRange(match.referent, match.span))
-            except Exception as exc:
-                print(document[match.span.start: match.span.stop])
-                raise exc
-        else:
-            raise NameError('Unknown time entity type.')
-    return dates
-
-
-def delete_red_per(spans, d):
-    # is not implemented yet
-    pass
+        self.daterange = daterange
+        self.Locations = Locations

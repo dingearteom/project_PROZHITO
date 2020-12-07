@@ -6,7 +6,8 @@ import re
 from functools import total_ordering
 from slovnet.markup import SpanMarkup
 import textract
-from model.model import fit_time
+import sys
+import os
 
 class DOC:
     dates=None
@@ -15,7 +16,7 @@ class DOC:
             self.text = text
             self.paragraphs = paragraphs
             self.per = per
-        elif (file_name is not None):
+        elif ((file_name is not None)):
             if (not tags_deletion):
                 other = DOC_from_text(docx_to_text(file_name))
             else:
@@ -23,8 +24,31 @@ class DOC:
             self.text = other.text
             self.paragraphs = other.paragraphs
             self.per = other.per
-    def dates_extraction(self):
-        self.dates = fit_time(self.text)
+        self.add_paros()
+
+    def add_paros(self):
+        arr = self.text.split('\n\n')
+        self.paros = []    # paragraphs in ordinary sense
+
+        ind = 0
+        for p in arr:
+           if (len(p) != 0):
+               self.paros.append(Span(ind, ind + len(p), type='Paros'))
+               ind += len(p)
+           ind += 2
+    def paros_id(self, span):
+        l = 0
+        r = len(self.paros)
+        while(r - l > 1):
+            m = (r + l) // 2
+            if (self.paros[m].start > span.start):
+                r = m
+            else:
+                l = m
+        return l
+
+
+
 
 
 
