@@ -14,12 +14,14 @@ from tags_extraction.DOC import DOC
 from Span import select_spans
 import time
 
-file_name = "data/Новая разметка/Непорожний П.С .Энергетика страны глазами министра _ Дневники/Артёмова РГГУ ФК 2 курс практика Непорожний П.С. 1959-1966.docx"
-d = DOC(file_name, tags_deletion=True)
+# file_name = "data/Новая разметка/Непорожний П.С .Энергетика страны глазами министра _ Дневники/Артёмова РГГУ ФК 2 курс практика Непорожний П.С. 1959-1966.docx"
+# d = DOC(file_name, tags_deletion=True)
+
+text = input()
 
 model = Model()
 
-doc = model.fit(d.text)
+doc = model.fit(text)
 
 
 output = {
@@ -34,7 +36,7 @@ for per in doc.per:
     output['Persons'].append({'id': per.id,
                               'start': per.span.start,
                               'stop': per.span.stop,
-                              'mention': d.text[per.span.start:per.span.stop]
+                              'mention': text[per.span.start:per.span.stop]
 
     })
 
@@ -57,7 +59,7 @@ for per in doc.per:
     output['Persons_Full_Set_of_Mentions'][per.id].append(
         {   'start': per.span.start,
             'stop': per.span.stop,
-            'mention': d.text[per.span.start:per.span.stop]
+            'mention': text[per.span.start:per.span.stop]
          }
     )
 
@@ -80,5 +82,6 @@ for location in doc.locations:
         'name': location.text
     })
 
-with open('data/result.txt', 'w') as file:
-    json.dump(output, file, indent=4, ensure_ascii=False)
+print(json.dumps(output, indent=4, ensure_ascii=False))
+# with open('data/result.txt', 'w') as file:
+#     json.dump(output, file, indent=4, ensure_ascii=False)
