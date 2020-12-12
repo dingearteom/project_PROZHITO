@@ -2,9 +2,13 @@ import sys
 import os
 
 ### Changing sys and current working directory
-if (sys.path[0].split('/')[-1] != 'project'):
-    os.chdir(os.getcwd() + "/project")
-    sys.path[0] += '/project'
+folder_path = '/'.join(os.path.realpath(__file__).split('/')[:-1])
+folder_name = folder_path.split('/')[-1]
+
+
+if (sys.path[0] != folder_path):
+    os.chdir(os.getcwd() + f"/{folder_name}")
+    sys.path[0] += f'/{folder_name}'
 ###
 
 
@@ -75,12 +79,24 @@ for par in doc.paragraphs:
         'locations': locations
     })
 
+id_par = [-1 for i in range(len(doc.paragraphs))]
+
+ind = 0
+for id in range(len(doc.paragraphs)):
+    par = doc.paragraphs[id]
+    while (ind < len(doc.locations) and doc.locations[ind].span.stop <= par.span.stop):
+        id_par[ind] = id
+        ind += 1
+
+ind = 0
 for location in doc.locations:
     output['Locations'].append({
         'start': location.span.start,
         'stop': location.span.stop,
-        'name': location.text
+        'name': location.text,
+        'id': id_par[ind]
     })
+    ind += 1
 
 print(json.dumps(output, indent=4, ensure_ascii=False))
 # with open('data/result.txt', 'w') as file:
